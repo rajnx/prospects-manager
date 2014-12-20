@@ -8,7 +8,7 @@
 
 
 #import "MSAzureAuthClient.h"
-#import "ViewController.h"
+#import "LoginViewController.h"
 #import <WindowsAzureMobileServices/WindowsAzureMobileServices.h>
 
 @implementation MSAzureAuthClient
@@ -19,30 +19,26 @@
     return accessToken;
 }
 
--(void) getToken : (UIViewController*) uiViewController
+-(UIViewController*) getToken
 {
     
-     self.client = [MSClient clientWithApplicationURLString:@"https://androidauthpoc.azure-mobile.net/" applicationKey:@"WYKZxzGvethXYhOXkXPtErBOyUzERb11"];
+    self.client = [MSClient clientWithApplicationURLString:@"https://androidauthpoc.azure-mobile.net/" applicationKey:@"WYKZxzGvethXYhOXkXPtErBOyUzERb11"];
     
-    [self.client loginWithProvider:@"WindowsAzureActiveDirectory" controller:uiViewController animated:YES
-                   completion:^(MSUser *user, NSError *error) {
-                       NSString *msg;
-                       if(error)
-                       {
-                           msg = [@"An error occured: " stringByAppendingString:error.description];
-                       }
-                       else
-                       {
-                           msg = [@"You are logged in as " stringByAppendingString:user.userId];
-                       }
-                       
-                       UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login"
-                                                                       message:msg
-                                                                      delegate:nil
-                                                             cancelButtonTitle:@"OK"
-                                                             otherButtonTitles: nil];
-                       [alert show];
-                   }];
+    self.loginController = [self.client
+                                    loginViewControllerWithProvider:@"WindowsAzureActiveDirectory"
+                                    completion:^(MSUser *user, NSError *error){
+                                        if (error)
+                                        {
+                                            self.error = error;
+                                        }
+                                        else
+                                        {
+                                            self.user = user;
+                                        }
+                                    }];
+    
+    return self.loginController;
+    
 }
 
 -(void) getProspects

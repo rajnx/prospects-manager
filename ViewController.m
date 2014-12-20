@@ -21,8 +21,6 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view, typically from a nib.
-    self.client = [[MSAzureAuthClient alloc] init];
-    [self.client getToken:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,7 +41,7 @@
 
 - (IBAction)manageCustomer:(UIButton *)sender
 {
-    [self.client getCustomers];
+    //[self.client getCustomers];
 }
 
 - (IBAction)conversionGraph:(UIButton *)sender
@@ -53,7 +51,5 @@
 - (IBAction)logOut:(UIButton *)sender
 {
 }
-     
-
 
 @end

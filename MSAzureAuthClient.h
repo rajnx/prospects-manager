@@ -12,8 +12,11 @@
 @interface MSAzureAuthClient : NSObject
 
 @property (strong, nonatomic) MSClient *client;
+@property (strong, nonatomic) UIViewController *loginController;
+@property (strong, nonatomic) NSError *error;
+@property (strong, nonatomic) MSUser *user;
 
--(void) getToken : (UIViewController*) uiViewController;
+-(UIViewController*) getToken;
 -(NSString*) processAccessToken: (NSString*) accessToken;
 -(void) getProspects;
 -(void) getCustomers;
