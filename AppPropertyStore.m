@@ -18,6 +18,7 @@ static AppPropertyStore *appPropertyStoreInstance;
     {
         appPropertyStoreInstance = [[super alloc] init];
     }
+    
     return appPropertyStoreInstance;
 }
 

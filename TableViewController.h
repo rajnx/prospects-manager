@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface TableViewController : UITableViewController
 
 @property(strong, nonatomic) NSArray *prospects;
+- (NSString *)sentenceCapitalizedString :(NSString*) string;
     
 @end

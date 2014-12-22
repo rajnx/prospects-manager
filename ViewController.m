@@ -10,6 +10,8 @@
 #import <ADALiOS/ADAuthenticationContext.h>
 #import <WindowsAzureMobileServices/WindowsAzureMobileServices.h>
 #import "MSAzureAuthClient.h"
+#import "KeychainWrapper.h"
+#import "AppPropertyStore.h"
 
 @interface ViewController ()
 
@@ -50,6 +52,10 @@
 
 - (IBAction)logOut:(UIButton *)sender
 {
+    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"userid"];
+    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"token"];
+    AppPropertyStore *app = [AppPropertyStore getInstance];
+    app.client.currentUser = nil;
 }
 
 @end

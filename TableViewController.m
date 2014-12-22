@@ -7,6 +7,7 @@
 //
 
 #import "TableViewController.h"
+#import "ViewController.h"
 #import "AppPropertyStore.h"
 
 @interface TableViewController ()
@@ -20,9 +21,6 @@ NSArray *recipes;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view.
-    recipes = [NSArray arrayWithObjects:@"Egg Benedict", @"Mushroom Risotto", @"Full Breakfast", @"Hamburger", @"Ham and Egg Sandwich", @"Creme Brelee", @"White Chocolate Donut", @"Starbucks Coffee", @"Vegetable Curry", @"Instant Noodle with Egg", @"Noodle with BBQ Pork", @"Japanese Noodle with Pork", @"Green Tea", @"Thai Shrimp Cake", @"Angry Birds Cake", @"Ham and Cheese Panini", nil];
-    
     AppPropertyStore *appPropertyStore = [AppPropertyStore getInstance];
     MSClient *client = [appPropertyStore client];
     
@@ -33,6 +31,7 @@ NSArray *recipes;
         } else
         {
             self.prospects = items;
+            [self.tableView reloadData];
         }
         }
     ];
@@ -54,25 +53,55 @@ NSArray *recipes;
 }
 */
 
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // Return the number of rows in the section.
     return [self.prospects count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:  (NSIndexPath *)indexPath
 {
-    static NSString *simpleTableIdentifier = @"SimpleTableCell";
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    if([self.prospects count] == 0)
+    {
+      cell.textLabel.text = @"Test Data";
+    }
+    else
+    {
+        NSDictionary *tempDictionary= [self.prospects objectAtIndex:indexPath.row];
+        
+        NSString *displayTextLabelFirst = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"firstName"]];
+        NSString *displayTextLabelFirstWithSpace = [displayTextLabelFirst stringByAppendingString:@" "];
+        NSString *displayTextLabelLast = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"lastName"]];
+        NSString *displayTextLabel = [displayTextLabelFirstWithSpace stringByAppendingString:displayTextLabelLast];
+        NSString *displayPartyAddress = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"partyAddress"]];
+        
+        cell.textLabel.text = displayTextLabel;
+        cell.detailTextLabel.text = displayPartyAddress;
     }
     
-    cell.textLabel.text = [self.prospects objectAtIndex:indexPath.row];
-    cell.imageView.image = [UIImage imageNamed:@"manageprospect.png"];
-
     return cell;
 }
+
+- (NSString *)sentenceCapitalizedString :(NSString*) string
+{
+    if (![string length]) {
+        return [NSString string];
+    }
+    NSString *uppercase = [[string substringToIndex:1] uppercaseString];
+    NSString *lowercase = [[string substringFromIndex:1] lowercaseString];
+    return [uppercase stringByAppendingString:lowercase];
+}
+
 
 @end
