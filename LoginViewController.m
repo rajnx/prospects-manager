@@ -7,8 +7,7 @@
 //  
 
 #import "LoginViewController.h"
-#import "AppPropertyStore.h"
-#import "KeychainWrapper.h"
+#import "HomeViewController.h"
 
 @interface LoginViewController ()
 
@@ -23,10 +22,13 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    self.appPropertyStore = [AppPropertyStore getInstance];
-    [self loadAuthInfo];
+    PMService *pmService = [PMService getInstance];
     
-    if (self.appPropertyStore.client.currentUser != nil)
+    [pmService loadAuthInfo];
+    
+    bool isAuthTokenAvaialble = [pmService isAuthInfoAvailable];
+    
+    if (isAuthTokenAvaialble)
     {
         [self loginWasSuccessful];
     }
@@ -37,24 +39,32 @@
     [super didReceiveMemoryWarning];
 }
 
+ /*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
 - (IBAction)loginButton:(UIButton *)sender
 {
-    MSClient *client = [MSClient clientWithApplicationURLString:@"https://androidauthpoc.azure-mobile.net/" applicationKey:@"WYKZxzGvethXYhOXkXPtErBOyUzERb11"];
+    PMService* pmServiceInstance = [PMService getInstance];
     
-    UIViewController *controller = [client
+    UIViewController *controller = [pmServiceInstance.msClient
                                     loginViewControllerWithProvider:@"WindowsAzureActiveDirectory"
-                                    completion:^(MSUser *user, NSError *error){
+                                    completion:^(MSUser *user, NSError *error)
+                                    {
                                         if (error)
                                         {
                                             [self loginFailed:[error localizedDescription]];
-                                        } else
+                                        }
+                                        else
                                         {
-                                            [self.appPropertyStore setClient:client];
-                                            [self saveAuthInfo];
                                             [self loginWasSuccessful];
                                         }
-                                        
-                                        [self dismissViewControllerAnimated:YES completion:nil];
                                     }];
     
     [self presentViewController:controller animated:YES completion:nil];
@@ -62,6 +72,13 @@
 
 -(void) loginWasSuccessful
 {
+    PMService* pmServiceInstance = [PMService getInstance];
+    
+    pmServiceInstance.authInfo->authToken = pmServiceInstance.msClient.currentUser.mobileServiceAuthenticationToken;
+    pmServiceInstance.authInfo->userId = pmServiceInstance.msClient.currentUser.userId;
+
+    [pmServiceInstance saveAuthInfo];
+    
     // Dismiss login screen
     [self dismissViewControllerAnimated:YES completion:nil];
     [self performSegueWithIdentifier:@"loginSuccess" sender:self];
@@ -75,39 +92,6 @@
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles: nil];
     [alert show];
-
 }
-
-- (void) saveAuthInfo{
-    [KeychainWrapper createKeychainValue:self.appPropertyStore.client.currentUser.userId
-                           forIdentifier:@"userid"];
-    [KeychainWrapper createKeychainValue:self.appPropertyStore.client.currentUser.mobileServiceAuthenticationToken
-                           forIdentifier:@"token"];
-}
-
-- (void)loadAuthInfo {
-    NSString *userid = [KeychainWrapper keychainStringFromMatchingIdentifier:@"userid"];
-    if (userid) {
-        NSLog(@"userid: %@", userid);
-        
-        if (self.appPropertyStore.client == nil)
-        {
-            self.appPropertyStore.client = [MSClient clientWithApplicationURLString:@"https://androidauthpoc.azure-mobile.net/" applicationKey:@"WYKZxzGvethXYhOXkXPtErBOyUzERb11"];
-        }
-        
-        self.appPropertyStore.client.currentUser = [[MSUser alloc] initWithUserId:userid];
-        self.appPropertyStore.client.currentUser.mobileServiceAuthenticationToken = [KeychainWrapper keychainStringFromMatchingIdentifier:@"token"];
-    }
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

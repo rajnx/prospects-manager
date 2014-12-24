@@ -7,8 +7,7 @@
 //
 
 #import "TableViewController.h"
-#import "ViewController.h"
-#import "AppPropertyStore.h"
+#import "PMUtils.h"
 
 @interface TableViewController ()
 
@@ -16,29 +15,41 @@
 
 @implementation TableViewController
 
-NSArray *recipes;
-
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
-    AppPropertyStore *appPropertyStore = [AppPropertyStore getInstance];
-    MSClient *client = [appPropertyStore client];
+    PMService *pmService = [PMService getInstance];
+    [pmService getDirPersons];
     
-    MSTable *table = [client tableWithName:@"DirPerson"];
-    [table readWithCompletion:^(NSArray *items, NSInteger totalCount, NSError *error) {
-        if(error) {
-            NSLog(@"ERROR %@", error);
-        } else
-        {
-            self.prospects = items;
-            [self.tableView reloadData];
-        }
-        }
-    ];
+    //Subscribe to refresh notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsSuccess) name:@"getDirPersonsSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsFailed) name:@"getDirPersonsFailed" object:nil];
+    
+    //Setup referesh control
+    UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+    refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
+    
+    [refresh addTarget:self action:@selector(refreshView) forControlEvents:(UIControlEventValueChanged)];
+    
+    self.refreshControl = refresh;
+}
+
+-(void) refreshView:(UIRefreshControl*) refresh
+{
+    refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MMM d, h:mm a"];
+    
+    NSString* lastUpdated = [NSString stringWithFormat:@"Last Updated on %@", [formatter stringFromDate:[NSDate date]]];
+    
+    refresh.attributedTitle = [[NSAttributedString alloc] initWithString:lastUpdated];
+    [refresh endRefreshing];
 
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -61,30 +72,36 @@ NSArray *recipes;
     return 1;
 }
 
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    PMService *pmService = [PMService getInstance];
     // Return the number of rows in the section.
-    return [self.prospects count];
+    return [pmService.prospects count];
 }
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:  (NSIndexPath *)indexPath
 {
+    PMService *pmService = [PMService getInstance];
+
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    if([self.prospects count] == 0)
+    if([pmService.prospects count] == 0)
     {
       cell.textLabel.text = @"Test Data";
     }
     else
     {
-        NSDictionary *tempDictionary= [self.prospects objectAtIndex:indexPath.row];
+        NSDictionary *tempDictionary= [pmService.prospects objectAtIndex:indexPath.row];
         
-        NSString *displayTextLabelFirst = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"firstName"]];
+        NSString *displayTextLabelFirst = [PMUtils sentenceCapitalizedString:[tempDictionary objectForKey:@"firstName"]];
         NSString *displayTextLabelFirstWithSpace = [displayTextLabelFirst stringByAppendingString:@" "];
-        NSString *displayTextLabelLast = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"lastName"]];
+        NSString *displayTextLabelLast = [PMUtils sentenceCapitalizedString:[tempDictionary objectForKey:@"lastName"]];
         NSString *displayTextLabel = [displayTextLabelFirstWithSpace stringByAppendingString:displayTextLabelLast];
-        NSString *displayPartyAddress = [self sentenceCapitalizedString:[tempDictionary objectForKey:@"partyAddress"]];
+        NSString *displayPartyAddress = [PMUtils sentenceCapitalizedString:[tempDictionary objectForKey:@"partyAddress"]];
         
         cell.textLabel.text = displayTextLabel;
         cell.detailTextLabel.text = displayPartyAddress;
@@ -93,14 +110,16 @@ NSArray *recipes;
     return cell;
 }
 
-- (NSString *)sentenceCapitalizedString :(NSString*) string
+-(void) getDirPersonsSuccess
 {
-    if (![string length]) {
-        return [NSString string];
-    }
-    NSString *uppercase = [[string substringToIndex:1] uppercaseString];
-    NSString *lowercase = [[string substringFromIndex:1] lowercaseString];
-    return [uppercase stringByAppendingString:lowercase];
+    PMService *pmService = [PMService getInstance];
+    [pmService getProspects];
+    [self.tableView reloadData];
+}
+
+-(void) getDirPersonsFailed;
+{
+    // Update UI
 }
 
 

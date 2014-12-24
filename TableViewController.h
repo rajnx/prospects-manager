@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PMService.h"
 
 @interface TableViewController : UITableViewController
-
-@property(strong, nonatomic) NSArray *prospects;
-- (NSString *)sentenceCapitalizedString :(NSString*) string;
-    
+-(void) getDirPersonsSuccess;
+-(void) getDirPersonsFailed;
 @end
