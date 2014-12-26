@@ -23,6 +23,8 @@
     PMService *pmService = [PMService getInstance];
     [pmService refreshAll];
     
+    [self.activityViewIndicator startAnimating];
+    
     //Subscribe to refresh notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsSuccess) name:@"getDirPersonsSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsFailed) name:@"getDirPersonsFailed" object:nil];
@@ -126,6 +128,7 @@
 {
     PMService *pmService = [PMService getInstance];
     [pmService getCustomers];
+    [self.activityViewIndicator stopAnimating];
     [self.tableView reloadData];
 }
 

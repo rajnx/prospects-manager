@@ -12,6 +12,7 @@
 @interface CustomersViewController : UITableViewController
 -(void) getDirPersonsSuccess;
 -(void) getDirPersonsFailed;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityViewIndicator;
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
 @end
 

@@ -13,5 +13,8 @@
 -(void) refreshView:(UIRefreshControl*) refresh;
 -(void) getDirPersonsSuccess;
 -(void) getDirPersonsFailed;
+
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
+
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityViewIndicator;
 @end

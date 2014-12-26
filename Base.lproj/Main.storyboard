@@ -87,6 +87,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <activityIndicatorView key="tableFooterView" hidden="YES" opaque="NO" alpha="0.89999999999999991" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" id="LOn-Ol-xv2">
+                            <rect key="frame" x="0.0" y="142" width="600" height="37"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </activityIndicatorView>
                         <prototypes>
                             <tableViewCell alpha="0.94999999999999996" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="Cell" textLabel="fhx-hA-uye" detailTextLabel="0Q4-I9-lzY" rowHeight="56" style="IBUITableViewCellStyleSubtitle" id="ABK-nD-0Mx">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -127,6 +132,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activityViewIndicator" destination="LOn-Ol-xv2" id="1bZ-gv-jC1"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4LR-Cw-X8X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -140,6 +148,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <activityIndicatorView key="tableFooterView" hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" id="DbU-g6-wB0">
+                            <rect key="frame" x="0.0" y="142" width="600" height="37"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </activityIndicatorView>
                         <prototypes>
                             <tableViewCell alpha="0.94999998807907104" contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="Cell" textLabel="fPa-XE-MvD" detailTextLabel="xPd-0r-Kj8" rowHeight="56" style="IBUITableViewCellStyleSubtitle" id="Nie-O6-BMB">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -171,6 +184,9 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" id="g84-ga-bi9"/>
+                    <connections>
+                        <outlet property="activityViewIndicator" destination="DbU-g6-wB0" id="H73-tD-q7k"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aTl-bj-SiM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
