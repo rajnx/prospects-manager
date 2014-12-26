@@ -7,6 +7,7 @@
 //
 
 #import "HomeViewController.h"
+#import "LoginViewController.h"
 
 @interface HomeViewController ()
 
@@ -19,6 +20,17 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view, typically from a nib.
+    
+    PMService *pmService = [PMService getInstance];
+    
+    [pmService loadAuthInfo];
+    
+    bool isAuthTokenAvaialble = [pmService isAuthInfoAvailable];
+    
+    if (!isAuthTokenAvaialble)
+    {
+        [self performSegueWithIdentifier:@"loginScreen" sender:self];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -27,32 +39,35 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-- (IBAction)createProspect:(UIButton *)sender
-{
-    
-}
-
-- (IBAction)manageProspect:(UIButton *)sender
-{
-}
-
-- (IBAction)manageCustomer:(UIButton *)sender
-{
-}
-
-- (IBAction)conversionGraph:(UIButton *)sender
-{
-}
-
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (IBAction)logOut:(UIButton *)sender
 {
- 
-    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"userid"];
-    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"token"];
-    AppPropertyStore *app = [AppPropertyStore getInstance];
-    app.client.currentUser = nil;
- 
-}*/
+    PMService *pmService = [PMService getInstance];
+    
+    [pmService deleteAuthInfo];
+    [pmService.msClient logout];
+    
+    for (NSHTTPCookie *value in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:value];
+    }
+    
+    [self performSegueWithIdentifier:@"loginScreen" sender:self];
+}
+
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:[LoginViewController class]])
+    {
+        LoginViewController *lVC = segue.destinationViewController;
+        lVC.delegate = self;
+    }
+}
+
+-(void)loginSuccessFul
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end

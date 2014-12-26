@@ -22,7 +22,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    PMService *pmService = [PMService getInstance];
+    /*PMService *pmService = [PMService getInstance];
     
     [pmService loadAuthInfo];
     
@@ -31,7 +31,7 @@
     if (isAuthTokenAvaialble)
     {
         [self loginWasSuccessful];
-    }
+    }*/
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,14 +74,9 @@
 {
     PMService* pmServiceInstance = [PMService getInstance];
     
-    pmServiceInstance.authInfo->authToken = pmServiceInstance.msClient.currentUser.mobileServiceAuthenticationToken;
-    pmServiceInstance.authInfo->userId = pmServiceInstance.msClient.currentUser.userId;
-
     [pmServiceInstance saveAuthInfo];
     
-    // Dismiss login screen
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self performSegueWithIdentifier:@"loginSuccess" sender:self];
+    [self.delegate loginSuccessFul];
 }
 
 -(void) loginFailed : (NSString*) msg
@@ -92,6 +87,7 @@
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles: nil];
     [alert show];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

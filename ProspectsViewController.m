@@ -6,21 +6,22 @@
 //  Copyright (c) 2014 HCL-MSFT. All rights reserved.
 //
 
-#import "TableViewController.h"
+#import "ProspectsViewController.h"
+#import "ProspectDetailsViewController.h"
 #import "PMUtils.h"
 
-@interface TableViewController ()
+@interface ProspectsViewController ()
 
 @end
 
-@implementation TableViewController
+@implementation ProspectsViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     PMService *pmService = [PMService getInstance];
-    [pmService getDirPersons];
+    [pmService refreshAll];
     
     //Subscribe to refresh notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsSuccess) name:@"getDirPersonsSuccess" object:nil];
@@ -30,7 +31,7 @@
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
     
-    [refresh addTarget:self action:@selector(refreshView) forControlEvents:(UIControlEventValueChanged)];
+    [refresh addTarget:self action:@selector(refreshView:) forControlEvents:(UIControlEventValueChanged)];
     
     self.refreshControl = refresh;
 }
@@ -44,6 +45,9 @@
     NSString* lastUpdated = [NSString stringWithFormat:@"Last Updated on %@", [formatter stringFromDate:[NSDate date]]];
     
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:lastUpdated];
+    PMService *pmService = [PMService getInstance];
+    [pmService getDirPersons];
+    
     [refresh endRefreshing];
 
 }
@@ -54,15 +58,23 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    PMService *pmService = [PMService getInstance];
+    
+    if ([segue.identifier isEqualToString:@"showProspecItemDetail"])
+    {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        ProspectDetailsViewController *destViewController = segue.destinationViewController;
+        destViewController.info = [pmService.prospects objectAtIndex:indexPath.row];
+        [segue.destinationViewController setDelegate:self];
+    }
 }
-*/
+
 
 #pragma mark - Table view data source
 
@@ -122,5 +134,10 @@
     // Update UI
 }
 
+
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue
+{
+    
+}
 
 @end

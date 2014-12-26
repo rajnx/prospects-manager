@@ -7,15 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LoginViewController.h"
 #import "PMService.h"
 
-@interface HomeViewController : UIViewController
+
+
+@interface HomeViewController : UIViewController<LoginViewControllerDelegate>
 /*
 - (IBAction)createProspect:(UIButton *)sender;
 - (IBAction)manageProspect:(UIButton *)sender;
 - (IBAction)manageCustomer:(UIButton *)sender;
 - (IBAction)conversionGraph:(UIButton *)sender;
 - (IBAction)logOut:(UIButton *)sender;*/
+
+- (IBAction)logOut:(UIButton *)sender;
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
+-(void) loginSuccessFul;
 
 @end
 

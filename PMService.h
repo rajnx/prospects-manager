@@ -13,29 +13,24 @@
 extern NSString* const c_ApplicationKey;
 extern NSString* const c_ApplicationUrl;
 
-typedef struct authInfo
-{
-    __unsafe_unretained NSString *userId;
-    __unsafe_unretained NSString *authToken;
-}AuthInfo;
 
-typedef struct prospect
-{
-    __unsafe_unretained NSString *personId;
-    __unsafe_unretained NSString *lastName;
-    __unsafe_unretained NSString *firstName;
-    __unsafe_unretained NSString *partAddress;
-    __unsafe_unretained NSString *phone;
-    __unsafe_unretained NSString *stateId;
-    __unsafe_unretained NSString *eMail;
-    __unsafe_unretained NSString *isProspect;
-    __unsafe_unretained NSString *middleName;
-    __unsafe_unretained NSString *countryId;
-    __unsafe_unretained NSString *currencyId;
-    __unsafe_unretained NSString *zipCode;
-    __unsafe_unretained NSString *cityId;
+@interface Prospect : NSObject
+
+    @property(nonatomic, strong) NSString *personId;
+    @property(nonatomic, strong) NSString *lastName;
+    @property(nonatomic, strong) NSString *firstName;
+    @property(nonatomic, strong) NSString *partyAddress;
+    @property(nonatomic, strong) NSString *phone;
+    @property(nonatomic, strong) NSString *stateId;
+    @property(nonatomic, strong) NSString *eMail;
+    @property(nonatomic, strong) NSString *isProspect;
+    @property(nonatomic, strong) NSString *middleName;
+    @property(nonatomic, strong) NSString *countryId;
+    @property(nonatomic, strong) NSString *currencyId;
+    @property(nonatomic, strong) NSString *zipCode;
+    @property(nonatomic, strong) NSString *cityId;
     
-}Prospect;
+@end
 
 @interface PMService : NSObject
 
@@ -50,12 +45,12 @@ typedef struct prospect
 @property(nonatomic, strong) NSMutableArray *prospects;
 @property(nonatomic, strong) NSMutableArray *customers;
 
-@property(nonatomic, strong) NSMutableArray *currencies;
-@property(nonatomic, strong) NSMutableArray *cities;
-@property(nonatomic, strong) NSMutableArray *states;
-@property(nonatomic, strong) NSMutableArray *countries;
+@property(nonatomic, strong) NSArray *currencies;
+@property(nonatomic, strong) NSArray *cities;
+@property(nonatomic, strong) NSArray *states;
+@property(nonatomic, strong) NSArray *countries;
 
-@property(nonatomic) AuthInfo *authInfo;
+@property(nonatomic) BOOL isAuthInfoAvailable;
 
 @property(nonatomic, strong) PMService *pmServiceInstance;
 
@@ -71,15 +66,18 @@ typedef struct prospect
 -(void) getStates;
 -(void) getCountries;
 
--(void) addProspect: (Prospect*) prospect;
+-(NSString*) getCurrencyFromId:(NSString*) Id;
+-(NSString*) getStateFromId:(NSString*) Id;
+-(NSString*) getCityFromId:(NSString*) Id;
+-(NSString*) getCountryFromId:(NSString*) Id;
+
+-(void) addProspect: (NSDictionary*) prospect;
 -(void) deleteProspect: (NSString*) personId;
 -(void) convertProspectToCustomer: (NSString*) personId;
 
--(void) login;
--(void) logOut;
-
 - (void) saveAuthInfo;
+- (void) deleteAuthInfo;
 - (BOOL) loadAuthInfo;
-- (BOOL) isAuthInfoAvailable;
 
+-(void) refreshAll;
 @end

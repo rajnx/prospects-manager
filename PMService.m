@@ -11,6 +11,10 @@
 NSString* const c_ApplicationKey = @"WYKZxzGvethXYhOXkXPtErBOyUzERb11";
 NSString* const c_ApplicationUrl = @"https://androidauthpoc.azure-mobile.net/";
 
+@implementation Prospect
+
+@end
+
 @implementation PMService
 
 static PMService *pmServiceInstance;
@@ -34,10 +38,11 @@ static PMService *pmServiceInstance;
     self.tblCurrency    = [self.msClient tableWithName:@"Currency"];
     self.tblCountry     = [self.msClient tableWithName:@"Country"];
     self.tblStates      = [self.msClient tableWithName:@"States"];
-    
-    self.authInfo = malloc(sizeof(AuthInfo));
-    
+        
     self.prospects = [NSMutableArray new];
+    self.customers = [NSMutableArray new];
+    
+    self.isAuthInfoAvailable = FALSE;
     
     return  self;
 }
@@ -48,13 +53,9 @@ static PMService *pmServiceInstance;
         if(error)
         {
             NSLog(@"ERROR %@", error);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDirPersonsFailed" object:nil];
-
         } else
         {
             self.dirPersons = items;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDirPersonsSuccess" object:nil];
-
         }
     }];
 }
@@ -81,31 +82,155 @@ static PMService *pmServiceInstance;
 
 -(void) getCustomers
 {
+    NSUInteger dirPersonsCount = self.dirPersons.count;
     
+    if (dirPersonsCount > 0)
+    {
+        for (NSUInteger i = 0; i < dirPersonsCount; i++)
+        {
+            NSDictionary *tempDictionary= [self.dirPersons objectAtIndex:i];
+            NSString *isProspect = [tempDictionary objectForKey:@"isProspect"];
+            if ([isProspect intValue] == 0)
+            {
+                [self.customers addObject:[self.dirPersons objectAtIndex:i]];
+            }
+            
+        }
+    }
 }
 
 -(void) getCurrencies
 {
-    
+    [self.tblCurrency readWithCompletion:^(NSArray *items, NSInteger totalCount, NSError *error){
+        if(error)
+        {
+            NSLog(@"ERROR %@", error);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDirPersonsFailed" object:nil];
+            
+        } else
+        {
+            self.currencies = items;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"getDirPersonsSuccess" object:nil];
+            
+        }
+    }];
 }
 
 -(void) getCities
 {
+    [self.tblCity readWithCompletion:^(NSArray *items, NSInteger totalCount, NSError *error){
+        if(error)
+        {
+            NSLog(@"ERROR %@", error);
+        } else
+        {
+            self.cities = items;
+        }
+    }];
     
 }
 
 -(void) getStates
 {
+    [self.tblStates readWithCompletion:^(NSArray *items, NSInteger totalCount, NSError *error){
+        if(error)
+        {
+            NSLog(@"ERROR %@", error);
+        } else
+        {
+            self.states = items;
+        }
+    }];
     
 }
 
 -(void) getCountries
 {
+    [self.tblCountry readWithCompletion:^(NSArray *items, NSInteger totalCount, NSError *error){
+        if(error)
+        {
+            NSLog(@"ERROR %@", error);
+        } else
+        {
+            self.countries = items;
+        }
+    }];
     
 }
 
--(void) addProspect: (Prospect*) prospect
+-(NSString*) getCurrencyFromId:(NSString*) Id
 {
+    NSString* currency;
+    
+    for (NSUInteger i = 0; i < self.currencies.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.currencies objectAtIndex:i];
+        NSString *currencyId = [tempDictionary objectForKey:@"id"];
+        if ([currencyId isEqualToString:Id])
+        {
+            currency = [tempDictionary objectForKey:@"currencyCode"];
+        }
+        
+    }
+    return currency;
+}
+
+-(NSString*) getStateFromId:(NSString*) Id
+{
+    for (NSUInteger i = 0; i < self.states.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.states objectAtIndex:i];
+        NSString *cityId = [tempDictionary objectForKey:@"id"];
+        if ([cityId isEqualToString:Id])
+        {
+            return [tempDictionary objectForKey:@"stateName"];
+        }
+    }
+    
+    return nil;
+}
+
+-(NSString*) getCityFromId:(NSString*) Id
+{
+    for (NSUInteger i = 0; i < self.cities.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.cities objectAtIndex:i];
+        NSString *cityId = [tempDictionary objectForKey:@"id"];
+        if ([cityId isEqualToString:Id])
+        {
+            return [tempDictionary objectForKey:@"cityName"];
+        }
+    }
+    
+    return nil;
+}
+
+-(NSString*) getCountryFromId:(NSString*) Id
+{
+    for (NSUInteger i = 0; i < self.countries.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.countries objectAtIndex:i];
+        NSString *cityId = [tempDictionary objectForKey:@"id"];
+        if ([cityId isEqualToString:Id])
+        {
+            return [tempDictionary objectForKey:@"countryName"];
+        }
+    }
+    
+    return nil;
+}
+
+-(void) addProspect: (NSDictionary*) item
+{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self.dirPersons];
+    
+    // Insert the item into the TodoItem table and add to the items array on completion
+    [self.tblDirPerson insert:item completion:^(NSDictionary *result, NSError *error)
+     {
+        NSUInteger index = [array count];
+        [array insertObject:item atIndex:index];
+        self.dirPersons = [NSArray arrayWithArray:array];
+    }];
     
 }
 
@@ -119,22 +244,18 @@ static PMService *pmServiceInstance;
     
 }
 
--(void) login
+- (void) deleteAuthInfo
 {
-    
-}
-
--(void) logOut
-{
-    
+    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"userid"];
+    [KeychainWrapper deleteItemFromKeychainWithIdentifier:@"token"];
 }
 
 - (void) saveAuthInfo
 {
-    if (self.authInfo->userId && self.authInfo->authToken)
+    if (self.msClient.currentUser.userId && self.msClient.currentUser.mobileServiceAuthenticationToken)
     {
-        [KeychainWrapper createKeychainValue:self.authInfo->userId forIdentifier:@"userid"];
-        [KeychainWrapper createKeychainValue:self.authInfo->authToken forIdentifier:@"token"];
+        [KeychainWrapper createKeychainValue:self.msClient.currentUser.userId forIdentifier:@"userid"];
+        [KeychainWrapper createKeychainValue:self.msClient.currentUser.mobileServiceAuthenticationToken forIdentifier:@"token"];
     }
 }
 
@@ -150,20 +271,23 @@ static PMService *pmServiceInstance;
         {
             self.msClient.currentUser = [[MSUser alloc] initWithUserId:userid];
             self.msClient.currentUser.mobileServiceAuthenticationToken = [KeychainWrapper keychainStringFromMatchingIdentifier:@"token"];
-            
-            self.authInfo->userId = self.msClient.currentUser.userId;
-            self.authInfo->authToken = self.msClient.currentUser.mobileServiceAuthenticationToken;
         }
         
-        return TRUE;
+        _isAuthInfoAvailable = TRUE;
+        return _isAuthInfoAvailable;
     }
     
-    return FALSE;
+    _isAuthInfoAvailable = FALSE;
+    return _isAuthInfoAvailable;
 }
 
-- (BOOL) isAuthInfoAvailable
+-(void) refreshAll
 {
-    return self.authInfo && self.authInfo->userId && self.authInfo->authToken;
+    [self getDirPersons];
+    [self getStates];
+    [self getCountries];
+    [self getCities];
+    [self getCurrencies];
 }
 
 @end

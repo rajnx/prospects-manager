@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "PMService.h"
 
-@interface TableViewController : UITableViewController
+@interface ProspectsViewController : UITableViewController
+-(void) refreshView:(UIRefreshControl*) refresh;
 -(void) getDirPersonsSuccess;
 -(void) getDirPersonsFailed;
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue;
 @end

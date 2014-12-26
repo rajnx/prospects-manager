@@ -9,7 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "PMService.h"
 
+@protocol LoginViewControllerDelegate <NSObject>
+
+@required
+
+-(void) loginSuccessFul;
+
+@end
+
 @interface LoginViewController : UIViewController
+
+@property(strong, nonatomic) id<LoginViewControllerDelegate> delegate;
 
 - (IBAction)loginButton:(UIButton *)sender;
 
