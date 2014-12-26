@@ -824,6 +824,32 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="bC8-WS-hst">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="nAu-Lt-rLK">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nAu-Lt-rLK" id="ow1-Ep-T29">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiH-kM-OPU">
+                                                    <rect key="frame" x="242" y="5" width="116" height="30"/>
+                                                    <state key="normal" title="Convert to Customer">
+                                                        <color key="titleColor" red="0.1098297677223645" green="0.78914141414141414" blue="0.082866279577461274" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <segue destination="BXZ-Su-tcy" kind="unwind" unwindAction="unwindToList:" id="7oV-I2-eIb"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LiH-kM-OPU" firstAttribute="centerX" secondItem="ow1-Ep-T29" secondAttribute="centerX" id="gHm-sq-EQT"/>
+                                                <constraint firstItem="LiH-kM-OPU" firstAttribute="top" secondItem="ow1-Ep-T29" secondAttribute="topMargin" constant="-3" id="jW4-0r-HYn"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection id="ppG-Mn-h0a">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="bCz-SM-tbt">
