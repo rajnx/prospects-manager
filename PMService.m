@@ -64,6 +64,8 @@ static PMService *pmServiceInstance;
 {
     NSUInteger dirPersonsCount = self.dirPersons.count;
     
+    [self.prospects removeAllObjects];
+    
     if (dirPersonsCount > 0)
     {
         for (NSUInteger i = 0; i < dirPersonsCount; i++)
@@ -83,6 +85,8 @@ static PMService *pmServiceInstance;
 -(void) getCustomers
 {
     NSUInteger dirPersonsCount = self.dirPersons.count;
+    
+    [self.customers removeAllObjects];
     
     if (dirPersonsCount > 0)
     {
@@ -111,7 +115,6 @@ static PMService *pmServiceInstance;
         {
             self.currencies = items;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getDirPersonsSuccess" object:nil];
-            
         }
     }];
 }
@@ -156,6 +159,40 @@ static PMService *pmServiceInstance;
         }
     }];
     
+}
+
+-(NSMutableArray*) getCitiesFromStateId:(NSString*) locationId
+{
+    NSMutableArray *mutableArray = [NSMutableArray new];
+    
+    for (NSUInteger i = 0; i < self.cities.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.cities objectAtIndex:i];
+        NSString *stateId = [tempDictionary objectForKey:@"stateId"];
+        if ([stateId isEqualToString:locationId])
+        {
+            [mutableArray addObject:tempDictionary];
+        }
+    }
+    
+    return mutableArray;
+}
+
+-(NSMutableArray*) getStatesFromCountryId:(NSString*) locationId
+{
+    NSMutableArray *mutableArray = [NSMutableArray new];
+    
+    for (NSUInteger i = 0; i < self.states.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.states objectAtIndex:i];
+        NSString *countryId = [tempDictionary objectForKey:@"countryId"];
+        if ([countryId isEqualToString:locationId])
+        {
+            [mutableArray addObject:tempDictionary];
+        }
+    }
+    
+    return mutableArray;
 }
 
 -(NSString*) getCurrencyFromId:(NSString*) Id
@@ -220,26 +257,80 @@ static PMService *pmServiceInstance;
     return nil;
 }
 
--(void) addProspect: (NSDictionary*) item
+-(void) addItem: (NSDictionary*) item
 {
-    NSMutableArray *array = [NSMutableArray arrayWithArray:self.dirPersons];
-    
-    // Insert the item into the TodoItem table and add to the items array on completion
-    [self.tblDirPerson insert:item completion:^(NSDictionary *result, NSError *error)
+    [self.tblDirPerson insert:item completion:^(NSDictionary *item, NSError *error)
      {
-        NSUInteger index = [array count];
-        [array insertObject:item atIndex:index];
-        self.dirPersons = [NSArray arrayWithArray:array];
-    }];
-    
+         if(error)
+         {
+             NSLog(@"Add Item Error %@", error);
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error."
+                                                             message:@"Insert Item failed."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"OK"
+                                                   otherButtonTitles: nil];
+             [alert show];
+         } else
+         {
+             NSLog(@"Add Item Success %@", error);
+             [self refreshAll];
+         }   //handle errors or any additional logic as needed
+     }];
 }
 
--(void) deleteProspect: (NSString*) personId
+-(void) updateItem: (NSDictionary*) item
+{
+    [self.tblDirPerson update:item completion:^(NSDictionary *item, NSError *error)
+     {
+         if(error)
+         {
+             NSLog(@"Update Item Error %@", error);
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error."
+                                                             message:@"Update Item failed."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"OK"
+                                                   otherButtonTitles: nil];
+             [alert show];
+         } else
+         {
+             NSLog(@"Update Item Success %@", error);
+             [self refreshAll];
+         }   //handle errors or any additional logic as needed
+    }];
+}
+
+-(void) deleteItem: (NSDictionary*) item
+{
+    [self.tblDirPerson delete:item completion:^(NSDictionary *item, NSError *error)
+     {
+         if(error)
+         {
+             NSLog(@"Delete Item Error %@", error);
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error."
+                                                             message:@"Delete Item failed."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"OK"
+                                                   otherButtonTitles: nil];
+             [alert show];
+         } else
+         {
+             NSLog(@"Delete Item Success %@", error);
+             [self refreshAll];
+         }   //handle errors or any additional logic as needed
+     }];
+}
+
+-(void) addItemSoft: (NSDictionary*) item items:(NSArray*) items
 {
     
 }
 
--(void) convertProspectToCustomer: (NSString*) personId
+-(void) updateItemSoft: (NSDictionary*) item items:(NSArray*) items
+{
+    
+}
+
+-(void) deleteItemSoft: (NSDictionary*) item items:(NSArray*) items
 {
     
 }

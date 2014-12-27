@@ -127,7 +127,7 @@
 {
     PMService *pmService = [PMService getInstance];
     [pmService getProspects];
-    [self.activityViewIndicator startAnimating];
+    [self.activityViewIndicator stopAnimating];
     [self.tableView reloadData];
 }
 
@@ -139,7 +139,32 @@
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
+    PMService *pmService = [PMService getInstance];
     
+    if([segue.identifier isEqualToString:@"cancel"])
+    {
+        // Do nothing
+    }
+    if([segue.identifier isEqualToString:@"done"])
+    {
+        [self.activityViewIndicator startAnimating];
+        [pmService addItem:self.item];
+    }
+    else if([segue.identifier isEqualToString:@"update"])
+    {
+        [self.activityViewIndicator startAnimating];
+        [pmService updateItem:self.item];
+    }
+    else if([segue.identifier isEqualToString:@"updateToCustomer"])
+    {
+        [self.activityViewIndicator startAnimating];
+        [pmService updateItem:self.item];
+    }
+    else if([segue.identifier isEqualToString:@"delete"])
+    {
+        [self.activityViewIndicator startAnimating];
+        [pmService delete:self.item];
+    }
 }
 
 @end

@@ -17,4 +17,8 @@
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
 
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityViewIndicator;
+
+@property (strong, nonatomic) NSString* detailsActionType;
+@property (strong, nonatomic) NSDictionary* item;
+
 @end

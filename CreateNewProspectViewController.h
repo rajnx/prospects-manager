@@ -15,17 +15,19 @@
 @property (strong, nonatomic) IBOutlet UITextField *middleName;
 @property (strong, nonatomic) IBOutlet UITextField *lastName;
 @property (strong, nonatomic) IBOutlet UITextField *partyAddress;
-@property (strong, nonatomic) IBOutlet UITextField *city;
-@property (strong, nonatomic) IBOutlet UITextField *state;
 @property (strong, nonatomic) IBOutlet UITextField *zipCode;
 
-@property (strong, nonatomic) IBOutlet UITextField *country;
 @property (strong, nonatomic) IBOutlet UITextField *phone;
 @property (strong, nonatomic) IBOutlet UITextField *email;
-@property (strong, nonatomic) IBOutlet UITextField *currency;
 
-//- (IBAction)cancel:(UIBarButtonItem *)sender;
+@property (weak, nonatomic) IBOutlet UITableViewCell *currencyCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *cityCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *stateCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *countryCell;
 
-//- (IBAction)addNewProspect:(UIBarButtonItem *)sender;
+@property(strong, nonatomic) NSString *cityId;
+@property(strong, nonatomic) NSString *stateId;
+@property(strong, nonatomic) NSString *countryId;
+@property(strong, nonatomic) NSString *currencyId;
 
 @end

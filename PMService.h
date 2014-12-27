@@ -71,9 +71,16 @@ extern NSString* const c_ApplicationUrl;
 -(NSString*) getCityFromId:(NSString*) Id;
 -(NSString*) getCountryFromId:(NSString*) Id;
 
--(void) addProspect: (NSDictionary*) prospect;
--(void) deleteProspect: (NSString*) personId;
--(void) convertProspectToCustomer: (NSString*) personId;
+-(void) addItem: (NSDictionary*) item;
+-(void) updateItem: (NSDictionary*) item;
+-(void) deleteItem: (NSDictionary*) item;
+
+-(void) addItemSoft: (NSDictionary*) item items: (NSArray*) items;
+-(void) updateItemSoft: (NSDictionary*) item items: (NSArray*) items;
+-(void) deleteItemSoft: (NSDictionary*) item items: (NSArray*) items;
+
+-(NSMutableArray*) getCitiesFromStateId:(NSString*) locationId;
+-(NSMutableArray*) getStatesFromCountryId:(NSString*) locationId;
 
 - (void) saveAuthInfo;
 - (void) deleteAuthInfo;

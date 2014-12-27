@@ -23,7 +23,7 @@
     PMService *pmService = [PMService getInstance];
     [pmService refreshAll];
     
-    [self.activityViewIndicator startAnimating];
+    [self.activityIndicator startAnimating];
     
     //Subscribe to refresh notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsSuccess) name:@"getDirPersonsSuccess" object:nil];
@@ -50,6 +50,10 @@
     
     PMService *pmService = [PMService getInstance];
     [pmService getDirPersons];
+    
+    [pmService getCustomers];
+    
+    [self.tableView reloadData];
     
     [refresh endRefreshing];
     
@@ -128,7 +132,7 @@
 {
     PMService *pmService = [PMService getInstance];
     [pmService getCustomers];
-    [self.activityViewIndicator stopAnimating];
+    [self.activityIndicator stopAnimating];
     [self.tableView reloadData];
 }
 
@@ -139,7 +143,21 @@
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
+    PMService *pmService = [PMService getInstance];
     
+    if([segue.identifier isEqualToString:@"cancel"])
+    {
+        // Do nothing
+    }
+    if([segue.identifier isEqualToString:@"delete"])
+    {
+        [pmService deleteItem:self.item];
+    }
+    if([segue.identifier isEqualToString:@"done"])
+    {
+        [self.activityIndicator startAnimating];
+        [pmService updateItem:self.item];
+    }
 }
 
 

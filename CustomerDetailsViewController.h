@@ -16,11 +16,17 @@
 @property (strong, nonatomic) IBOutlet UITextField *contactNumber;
 @property (strong, nonatomic) IBOutlet UITextField *emailAddress;
 @property (strong, nonatomic) IBOutlet UITextField *address;
+@property (strong, nonatomic) IBOutlet UITextField *zipCode;
 
-@property (strong, nonatomic) IBOutlet UITextField *city;
-@property (strong, nonatomic) IBOutlet UITextField *state;
-@property (strong, nonatomic) IBOutlet UITextField *country;
-@property (strong, nonatomic) IBOutlet UITextField *currency;
+@property (weak, nonatomic) IBOutlet UITableViewCell *cityCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *stateCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *countryCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *currencyCell;
+
+@property(strong, nonatomic) NSString *cityId;
+@property(strong, nonatomic) NSString *stateId;
+@property(strong, nonatomic) NSString *countryId;
+@property(strong, nonatomic) NSString *currencyId;
 
 @property (strong, nonatomic) NSDictionary *info;
 @property (strong, nonatomic) Prospect *prospect;
