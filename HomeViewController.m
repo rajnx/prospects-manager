@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "LoginViewController.h"
+#import "CreateNewProspectViewController.h"
 
 @interface HomeViewController ()
 
@@ -20,6 +21,7 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view, typically from a nib.
+    
     
     PMService *pmService = [PMService getInstance];
     
@@ -63,11 +65,32 @@
         LoginViewController *lVC = segue.destinationViewController;
         lVC.delegate = self;
     }
+
+    PMService *pmService = [PMService getInstance];
+    if ([segue.identifier isEqualToString:@"newProspect"])
+    {
+        [pmService refreshAll];
+    }
 }
 
 -(void)loginSuccessFul
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue
+{
+    PMService *pmService = [PMService getInstance];
+    
+    if([segue.identifier isEqualToString:@"cancel"])
+    {
+        // Do nothing
+    }
+    if([segue.identifier isEqualToString:@"done"])
+    {
+        [pmService addItem:self.item];
+    }
+}
+
 
 @end

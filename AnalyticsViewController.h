@@ -18,6 +18,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelProspectCount;
 @property (weak, nonatomic) IBOutlet UILabel *labelCustomersCount;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
+@property (weak, nonatomic) IBOutlet UIProgressView *topCityProgress;
+@property (weak, nonatomic) IBOutlet UILabel *topCityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *topCountryLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *topStateLabel;
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 
 -(void) getDirPersonsSuccess;
 -(void) getDirPersonsFailed;

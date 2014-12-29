@@ -22,8 +22,9 @@
     
     PMService *pmService = [PMService getInstance];
     [pmService refreshAll];
+
+    // Do any additional setup after loading the view, typically from a nib.
     [self.activityViewIndicator startAnimating];
-    
     //Subscribe to refresh notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsSuccess) name:@"getDirPersonsSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDirPersonsFailed) name:@"getDirPersonsFailed" object:nil];
@@ -127,6 +128,7 @@
 {
     PMService *pmService = [PMService getInstance];
     [pmService getProspects];
+    self.activityViewIndicator.hidesWhenStopped = TRUE;
     [self.activityViewIndicator stopAnimating];
     [self.tableView reloadData];
 }

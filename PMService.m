@@ -56,6 +56,7 @@ static PMService *pmServiceInstance;
         } else
         {
             self.dirPersons = items;
+            [self getStates];
         }
     }];
 }
@@ -128,6 +129,7 @@ static PMService *pmServiceInstance;
         } else
         {
             self.cities = items;
+            [self getCurrencies];
         }
     }];
     
@@ -142,6 +144,7 @@ static PMService *pmServiceInstance;
         } else
         {
             self.states = items;
+            [self getCountries];
         }
     }];
     
@@ -156,6 +159,7 @@ static PMService *pmServiceInstance;
         } else
         {
             self.countries = items;
+            [self getCities];
         }
     }];
     
@@ -372,13 +376,109 @@ static PMService *pmServiceInstance;
     return _isAuthInfoAvailable;
 }
 
+-(NSString*) getTopCustomerCountry
+{
+    NSString *topCountryId = [NSString new];
+    int maxCount = 0;
+    
+    for (NSUInteger i = 0; i < self.countries.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.countries objectAtIndex:i];
+        NSString *currentCountryId = [tempDictionary objectForKey:@"id"];
+        int currentCount = 0;
+        
+        for (NSUInteger j = 0; j < self.customers.count; j++)
+        {
+            NSDictionary *tempDictionary= [self.customers objectAtIndex:j];
+            NSString *Id = [tempDictionary objectForKey:@"countryId"];
+            
+            if ([Id isEqualToString:currentCountryId])
+            {
+                currentCount = currentCount + 1;
+            }
+        }
+        
+        if (currentCount>maxCount)
+        {
+            maxCount = currentCount;
+            topCountryId = currentCountryId;
+        }
+    }
+    
+    self.maxCount = maxCount;
+    return [NSString stringWithFormat:@"%@: %i", [self getCountryFromId:topCountryId], maxCount];
+}
+
+-(NSString*) getTopCustomerState
+{
+    NSString *topCountryId = [NSString new];
+    int maxCount = 0;
+    
+    for (NSUInteger i = 0; i < self.states.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.states objectAtIndex:i];
+        NSString *currentCountryId = [tempDictionary objectForKey:@"id"];
+        int currentCount = 0;
+        
+        for (NSUInteger j = i; j < self.customers.count; j++)
+        {
+            NSDictionary *tempDictionary= [self.customers objectAtIndex:j];
+            NSString *Id = [tempDictionary objectForKey:@"stateId"];
+            
+            if ([Id isEqualToString:currentCountryId])
+            {
+                currentCount = currentCount + 1;
+            }
+        }
+        
+        if (currentCount>maxCount)
+        {
+            maxCount = currentCount;
+            topCountryId = currentCountryId;
+        }
+    }
+    self.maxCount = maxCount;
+
+    return [NSString stringWithFormat:@"%@: %i", [self getStateFromId:topCountryId], maxCount];
+}
+
+-(NSString*) getTopCustomerCity
+{
+    NSString *topCountryId = [NSString new];
+    int maxCount = 0;
+    
+    for (NSUInteger i = 0; i < self.cities.count; i++)
+    {
+        NSDictionary *tempDictionary= [self.cities objectAtIndex:i];
+        NSString *currentCountryId = [tempDictionary objectForKey:@"id"];
+        int currentCount = 0;
+        
+        for (NSUInteger j = i; j < self.customers.count; j++)
+        {
+            NSDictionary *tempDictionaryJ= [self.customers objectAtIndex:j];
+            NSString *Id = [tempDictionaryJ objectForKey:@"cityId"];
+            
+            if ([Id isEqualToString:currentCountryId])
+            {
+                currentCount = currentCount + 1;
+            }
+        }
+        
+        if (currentCount>maxCount)
+        {
+            maxCount = currentCount;
+            topCountryId = currentCountryId;
+        }
+    }
+    
+    self.maxCount = maxCount;
+
+    return [NSString stringWithFormat:@"%@: %i", [self getCityFromId:topCountryId], maxCount];
+}
+
 -(void) refreshAll
 {
     [self getDirPersons];
-    [self getStates];
-    [self getCountries];
-    [self getCities];
-    [self getCurrencies];
 }
 
 @end

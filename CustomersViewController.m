@@ -132,6 +132,7 @@
 {
     PMService *pmService = [PMService getInstance];
     [pmService getCustomers];
+    self.activityIndicator.hidesWhenStopped = TRUE;
     [self.activityIndicator stopAnimating];
     [self.tableView reloadData];
 }

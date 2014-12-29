@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PMService.h"
 
-@interface CreateNewProspectViewController : UITableViewController
+@interface CreateNewProspectViewController : UITableViewController<UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *firstName;
 @property (strong, nonatomic) IBOutlet UITextField *middleName;

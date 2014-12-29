@@ -24,7 +24,13 @@
     self.stateCell.textLabel.font = [UIFont systemFontOfSize:14];
     self.countryCell.textLabel.font = [UIFont systemFontOfSize:14];
     self.currencyCell.textLabel.font = [UIFont systemFontOfSize:14];
+    
+    self.firstName.delegate = self;
 
+    self.cityId = @"";
+    self.stateId =@"";
+    self.countryId  = @"";
+    self.currencyId = @"";
 }
 
 - (void)didReceiveMemoryWarning
@@ -140,6 +146,14 @@
     [item setObject:self.currencyId forKey:@"currencyId"];
     
     return item;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ([textField.text isEqualToString:@""])
+        return FALSE;
+    else
+        return TRUE;
 }
 
 @end

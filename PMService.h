@@ -50,6 +50,8 @@ extern NSString* const c_ApplicationUrl;
 @property(nonatomic, strong) NSArray *states;
 @property(nonatomic, strong) NSArray *countries;
 
+@property(nonatomic) int maxCount;
+
 @property(nonatomic) BOOL isAuthInfoAvailable;
 
 @property(nonatomic, strong) PMService *pmServiceInstance;
@@ -85,6 +87,10 @@ extern NSString* const c_ApplicationUrl;
 - (void) saveAuthInfo;
 - (void) deleteAuthInfo;
 - (BOOL) loadAuthInfo;
+
+-(NSString*) getTopCustomerCountry;
+-(NSString*) getTopCustomerState;
+-(NSString*) getTopCustomerCity;
 
 -(void) refreshAll;
 @end

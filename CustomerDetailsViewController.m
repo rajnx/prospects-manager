@@ -40,6 +40,7 @@
     self.emailAddress.text = self.prospect.eMail;
     self.contactNumber.text = self.prospect.phone;
     self.address.text = self.prospect.partyAddress;
+    self.zipCode.text = self.prospect.zipCode;
     
     
     self.cityId = [self.info objectForKey:@"cityId"];

@@ -24,6 +24,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
 -(void) loginSuccessFul;
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue;
+
+@property (strong, nonatomic) NSString* detailsActionType;
+@property (strong, nonatomic) NSDictionary* item;
 
 @end
 
